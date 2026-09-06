@@ -1,4 +1,4 @@
-# model-router for Claude Code
+# model-router-claude
 
 A skill plus eighteen pinned subagents that route each **part** of a task to the right model *and* effort level, and re-route at every checkpoint while the task is running. Quality-first by default.
 
@@ -40,7 +40,7 @@ Details, domain rubrics, anti-patterns, and seven worked examples are in `skills
 ## Install
 
 ```bash
-git clone https://github.com/NathalieChouLab/model-router.git
+git clone https://github.com/NathalieChouLab/model-router-claude.git
 cd model-router && ./install.sh
 ```
 

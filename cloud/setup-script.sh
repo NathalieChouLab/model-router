@@ -5,7 +5,7 @@
 # Paste into claude.ai/code -> environment settings -> Setup script. Runs once per environment,
 # then the filesystem snapshot is cached for about seven days.
 # Profile: set MODEL_ROUTER_PROFILE=quality|pro|cost in the environment variables (default quality).
-RAW="https://raw.githubusercontent.com/NathalieChouLab/model-router/main"
+RAW="https://raw.githubusercontent.com/NathalieChouLab/model-router-claude/main"
 PROFILE="${MODEL_ROUTER_PROFILE:-quality}"
 
 install_into() {
