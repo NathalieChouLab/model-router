@@ -10,7 +10,7 @@ PROFILE="${MODEL_ROUTER_PROFILE:-quality}"
 
 install_into() {
   local DEST="$1"
-  mkdir -p "$DEST/agents" "$DEST/skills/model-router/references"
+  mkdir -p "$DEST/agents" "$DEST/skills/model-router/references" 2>/dev/null || return 0
   curl -fsSL "$RAW/cloud/manifest.txt" -o /tmp/mr-manifest.txt || { echo "model-router: manifest fetch failed"; return 0; }
   while read -r f; do
     [ -n "$f" ] && curl -fsSL "$RAW/$f" -o "$DEST/$f" || true
@@ -18,7 +18,7 @@ install_into() {
   curl -fsSL "$RAW/profiles/$PROFILE.tsv" -o /tmp/mr-profile.tsv || true
   if [ -s /tmp/mr-profile.tsv ]; then
     while IFS=$'\t' read -r a m e; do
-      [ -n "$a" ] && [ -f "$DEST/agents/$a.md" ] && sed -i -e "s/^model: .*/model: $m/" -e "s/^effort: .*/effort: $e/" "$DEST/agents/$a.md"
+      [ -n "$a" ] && [ -f "$DEST/agents/$a.md" ] && sed -i.bak -e "s/^model: .*/model: $m/" -e "s/^effort: .*/effort: $e/" "$DEST/agents/$a.md" && rm -f "$DEST/agents/$a.md.bak"
     done < /tmp/mr-profile.tsv
   fi
   local CM="$DEST/CLAUDE.md"
@@ -29,5 +29,5 @@ install_into() {
 }
 
 install_into "${HOME:-/root}/.claude"
-[ "${HOME:-/root}" != "/root" ] && install_into /root/.claude
+[ "${HOME:-/root}" != "/root" ] && [ -w /root ] && install_into /root/.claude
 true
