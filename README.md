@@ -91,6 +91,21 @@ The tables live in `profiles/*.tsv` (agent, model, effort per line) — edit or 
 
 `skills/model-router/references/codex-port-prompt.md` is a ready-to-paste prompt that asks OpenAI Codex to discover its own model/effort/sub-agent levers and build the same router with `config.toml` profiles and `AGENTS.md`.
 
+## Cloud sandboxes (Claude Code web / mobile, Codex cloud)
+
+Cloud sessions run in a fresh sandbox and never see your machine's home folder. Put the router inside the repo instead, where it travels with the clone:
+
+```bash
+PROJECT_DIR=/path/to/your/repo ./install.sh
+cd /path/to/your/repo && git add -A && git commit -m "Add model-router" && git push
+```
+
+Or, inside any cloud session, install for that session only:
+
+```bash
+git clone https://github.com/NathalieChouLab/model-router.git /tmp/mr && /tmp/mr/install.sh
+```
+
 ## Requirements
 
 Claude Code ≥ 2.1.25x (subagent frontmatter `effort:` field and per-call `model` override). Verified on 2.1.263.
