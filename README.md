@@ -25,7 +25,7 @@ Claude Code cannot change its own session model mid-task (`/model` and `/effort`
 | `editor` | opus | medium | read-only prose review against a voice guide or standard; never the writer |
 | `counsel` | fable | high | read-only legal/regulatory analysis: jurisdiction, primary sources, what a professional must confirm |
 | `operator` | opus | high | system administration and ops: read-only diagnosis first, minimal change, every command reported |
-| `monitor` | sonnet | low | read-only log/health/status checks; reports only what changed or looks wrong |
+| `monitor` | haiku | low | read-only log/health/status checks; reports only what changed or looks wrong |
 
 ## How it routes
 
@@ -73,7 +73,7 @@ PROFILE=cost ./install.sh      # usage-first on any plan
 | editor | opus · medium | sonnet · medium | sonnet · low |
 | counsel | fable · high | opus · high | opus · high |
 | operator | opus · high | sonnet · high | sonnet · high |
-| monitor | sonnet · low | haiku · low | haiku · low |
+| monitor | haiku · low | haiku · low | haiku · low |
 
 **Why the `pro` profile looks like this.** On Claude Pro the session default is Sonnet 5, Opus draws on the same 5-hour usage window, and Fable can bill to usage credits rather than the plan's included limits (see [Claude Code model configuration](https://code.claude.com/docs/en/model-config)). So `pro` keeps the mechanical tiers on Sonnet at high effort, which is where most tokens go, and spends Opus only on the two tiers where judgment is expensive to get wrong: `architect` and `auditor`. The routing rules are identical; only the pins change. If you later buy usage credits or move to Max, re-run with `PROFILE=quality`.
 

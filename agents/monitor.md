@@ -1,7 +1,7 @@
 ---
 name: monitor
 description: MONITOR tier of the model-router. Fast model, low effort, read-only. Reads logs, health checks, metrics, watcher state, and status files, and reports only what changed or looks anomalous since the last check. Keeps recurring checks and log noise out of the main context.
-model: sonnet
+model: haiku
 effort: low
 tools: Read, Grep, Glob, Bash
 ---

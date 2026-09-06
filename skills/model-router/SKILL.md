@@ -85,7 +85,7 @@ and each pins its model):
 - `editor` — Opus at medium effort, read-only prose review against a standard
 - `counsel` — Fable 5.1, read-only legal/regulatory analysis with primary sources
 - `operator` — Opus, system administration and ops with read-only diagnosis first
-- `monitor` — Sonnet at low effort, read-only log/health/status checks
+- `monitor` — Haiku at low effort, read-only log/health/status checks
 
 Each agent file pins **both** a model and an effort level, so switching tier
 switches effort automatically:
@@ -109,7 +109,7 @@ switches effort automatically:
 | `editor` | opus | medium | nothing — the standard does the work |
 | `counsel` | fable | high | "ultrathink" for multi-jurisdiction or high-stakes questions |
 | `operator` | opus | high | "think hard" before any state-changing command |
-| `monitor` | sonnet | low | nothing — never bump a monitor |
+| `monitor` | haiku | low | nothing — never bump a monitor |
 
 The table is the `quality` profile. On Claude Pro install with `PROFILE=pro`
 (Sonnet for the mechanical tiers, Opus for architect and auditor); the routing
