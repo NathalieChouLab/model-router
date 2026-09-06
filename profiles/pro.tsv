@@ -16,3 +16,7 @@ editor	sonnet	medium
 counsel	opus	high
 operator	sonnet	high
 monitor	haiku	low
+clerk	haiku	low
+runner	haiku	low
+digest	haiku	low
+quickfix	sonnet	low

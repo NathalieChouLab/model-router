@@ -61,6 +61,10 @@ prose review            → EDITOR      (against a voice guide; never the writer
 legal / regulatory substance → COUNSEL (jurisdiction, primary sources, what a professional must confirm)
 system / ops / deploy work → OPERATOR  (read-only diagnosis first; blast radius 2 stops for the human)
 logs, health, status checks → MONITOR  (reports only what changed or looks wrong)
+mechanical edits, renames, formatting, apply a diff → CLERK  (cheapest model; stops on any decision)
+run a command / test suite and report → RUNNER  (cheapest model; output stays out of main context)
+quick summary of one file, diff, or thread → DIGEST (cheapest model; promotes to librarian if it matters)
+one-file fix with known cause and existing check → QUICKFIX (small model; one attempt, then builder)
 ```
 
 ## Step 3 — delegate to the pinned subagents
@@ -86,6 +90,10 @@ and each pins its model):
 - `counsel` — Fable 5.1, read-only legal/regulatory analysis with primary sources
 - `operator` — Opus, system administration and ops with read-only diagnosis first
 - `monitor` — Haiku at low effort, read-only log/health/status checks
+- `clerk` — Haiku at low effort, mechanical edits and file housekeeping, no decisions
+- `runner` — Haiku at low effort, runs the named command and reports pass/fail compactly
+- `digest` — Haiku at low effort, ten-line summary of one item
+- `quickfix` — Sonnet at low effort, one small fix proven by an existing check
 
 Each agent file pins **both** a model and an effort level, so switching tier
 switches effort automatically:
@@ -110,6 +118,10 @@ switches effort automatically:
 | `counsel` | fable | high | "ultrathink" for multi-jurisdiction or high-stakes questions |
 | `operator` | opus | high | "think hard" before any state-changing command |
 | `monitor` | haiku | low | nothing — never bump a monitor |
+| `clerk` | haiku | low | nothing — if it needs thought it is not clerk work |
+| `runner` | haiku | low | nothing |
+| `digest` | haiku | low | nothing — promote to librarian instead |
+| `quickfix` | sonnet | low | nothing — promote to builder instead |
 
 The table is the `quality` profile. On Claude Pro install with `PROFILE=pro`
 (Sonnet for the mechanical tiers, Opus for architect and auditor); the routing
@@ -144,10 +156,18 @@ verifier gives a verdict, a new fact appears, the user changes the ask. At
 each checkpoint re-score the *next* part and switch tier if the score moved.
 Switching down is normal and expected; switching up is triggered by evidence.
 
+**Low-effort tiers first.** Before sending a part to the builder, ask whether it is
+mechanical: a rename, a bulk replace, formatting, applying a diff already written,
+running tests, summarizing one file, a one-line fix with a known cause and an
+existing check. If yes, it goes to CLERK, RUNNER, DIGEST, or QUICKFIX at low
+effort. These tiers stop and report the moment a decision is needed; that
+report is the checkpoint that promotes the part.
+
 **Shift UP when:**
 - A part reveals unknown cause, unfamiliar architecture, or a trade-off → next part is ARCHITECT.
 - Anyone finds the change touches billing/auth/data/deploy → stop, blast radius 2, ARCHITECT, wait for the human.
 - Scout says "can't tell without reading deeply" → promote that part to BUILDER.
+- Clerk stops on an ambiguity, digest says "promote to librarian", quickfix fails its one attempt → promote that part one tier (BUILDER, LIBRARIAN, BUILDER respectively). Never retry a low-effort tier.
 - Builder fails verification **once** → if the failure is a contained slip, retry BUILDER with "think harder"; if it hints the plan or the cause is off, go straight to ARCHITECT (Fable). Quality-first means one failure is enough evidence.
 - Builder fails verification **twice** → ARCHITECT, no exceptions.
 - Verifier flags a BLOCKER it can't explain → ARCHITECT root-causes before anyone patches.
@@ -160,7 +180,7 @@ Switching down is normal and expected; switching up is triggered by evidence.
 
 **Shift DOWN when:**
 - The plan is approved → implementation goes to BUILDER, not the architect.
-- A part becomes a lookup, rename, grep, or summary → SCOUT, in parallel.
+- A part becomes a lookup or grep → SCOUT; a rename, bulk edit, or formatting pass → CLERK; a test run → RUNNER; a one-file summary → DIGEST; all in parallel where independent.
 - A retry passed → the *next* part resumes its own natural tier; the escalation does not stick to the whole task.
 - Verification is now mechanical (tests exist) → VERIFIER at default effort.
 - The remaining work is prose (docs, changelog, copy) → WRITER, with the verifier checking claims against code.
