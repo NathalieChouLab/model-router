@@ -83,6 +83,10 @@ The tables live in `profiles/*.tsv` (agent, model, effort per line) — edit or 
 
 `PROFILE=cost` lowers the pins. To also loosen the rules, edit `SKILL.md`: tiers scout 0–2, builder 3–5, architect 6–8, and escalate only after **two** failed verifications.
 
+## Claude app (chat) edition
+
+`claude-app/model-router-chat.zip` is an uploadable skill for the chat side of the Claude app, where subagents and model switching do not exist: it routes roles and reasoning depth instead. See `claude-app/README.md`.
+
 ## Porting to Codex
 
 `skills/model-router/references/codex-port-prompt.md` is a ready-to-paste prompt that asks OpenAI Codex to discover its own model/effort/sub-agent levers and build the same router with `config.toml` profiles and `AGENTS.md`.
