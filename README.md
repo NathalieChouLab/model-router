@@ -36,20 +36,32 @@ cd model-router && ./install.sh
 
 This copies `skills/model-router/` to `~/.claude/skills/` and the eight agents to `~/.claude/agents/`, backing up anything already there. Open a new Claude Code session and give it a non-trivial task, or type `/model-router`.
 
-**No access to Fable?** Change `model: fable` to `model: opus` in `agents/architect.md` (the installer prints the one-liner).
+### Profiles: pick one for your plan
+
+```bash
+PROFILE=quality ./install.sh   # default — Max, Team Premium, Enterprise, API
+PROFILE=pro ./install.sh       # Claude Pro
+PROFILE=cost ./install.sh      # usage-first on any plan
+```
+
+| Agent | quality | pro | cost |
+|---|---|---|---|
+| scout | sonnet · low | haiku · low | haiku · low |
+| researcher | sonnet · medium | sonnet · medium | haiku · medium |
+| builder | opus · high | sonnet · high | sonnet · medium |
+| tester | opus · high | sonnet · high | sonnet · medium |
+| writer | opus · medium | sonnet · medium | sonnet · low |
+| verifier | opus · high | sonnet · high | sonnet · medium |
+| architect | fable · high | opus · high | opus · high |
+| auditor | fable · max | opus · xhigh | opus · high |
+
+**Why the `pro` profile looks like this.** On Claude Pro the session default is Sonnet 5, Opus draws on the same 5-hour usage window, and Fable can bill to usage credits rather than the plan's included limits (see [Claude Code model configuration](https://code.claude.com/docs/en/model-config)). So `pro` keeps the mechanical tiers on Sonnet at high effort, which is where most tokens go, and spends Opus only on the two tiers where judgment is expensive to get wrong: `architect` and `auditor`. The routing rules are identical; only the pins change. If you later buy usage credits or move to Max, re-run with `PROFILE=quality`.
+
+The tables live in `profiles/*.tsv` (agent, model, effort per line) — edit or add your own and install with `PROFILE=<name>`.
 
 ## Cost-first variant
 
-If usage matters more than retries, lower the pins and raise the thresholds. This is how the router originally shipped:
-
-| Agent | Model | Effort |
-|---|---|---|
-| scout | haiku | low |
-| builder | sonnet | medium |
-| verifier | sonnet | medium |
-| architect | opus | high |
-
-and in `SKILL.md` use tiers scout 0–2, builder 3–5, architect 6–8, with escalation only after **two** failed verifications.
+`PROFILE=cost` lowers the pins. To also loosen the rules, edit `SKILL.md`: tiers scout 0–2, builder 3–5, architect 6–8, and escalate only after **two** failed verifications.
 
 ## Porting to Codex
 

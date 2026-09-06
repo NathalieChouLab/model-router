@@ -81,6 +81,10 @@ switches effort automatically:
 | `architect` | fable | high | "ultrathink" for irreversible / unknown-cause work |
 | `auditor` | fable | max | already at maximum — never bump; split the change instead |
 
+The table is the `quality` profile. On Claude Pro install with `PROFILE=pro`
+(Sonnet for the mechanical tiers, Opus for architect and auditor); the routing
+rules below do not change, only the pins.
+
 One-off override without editing the files: the Agent tool's `model` parameter
 beats the frontmatter (e.g. run `builder` with `model: fable` for a part that is
 specified but unusually delicate).

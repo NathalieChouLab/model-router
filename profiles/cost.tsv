@@ -1,0 +1,8 @@
+scout	haiku	low
+researcher	haiku	medium
+builder	sonnet	medium
+tester	sonnet	medium
+writer	sonnet	low
+verifier	sonnet	medium
+architect	opus	high
+auditor	opus	high

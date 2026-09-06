@@ -1,0 +1,8 @@
+scout	sonnet	low
+researcher	sonnet	medium
+builder	opus	high
+tester	opus	high
+writer	opus	medium
+verifier	opus	high
+architect	fable	high
+auditor	fable	max
