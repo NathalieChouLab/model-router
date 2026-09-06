@@ -55,6 +55,12 @@ cause of a failure      → DEBUGGER    (reproduce, bisect, instrument; hands ca
 UI / visual review      → DESIGNER    (renders the page, checks against a written standard)
 numbers people act on   → ANALYST     (code-computed, re-runnable; DECISION-GRADE figures go to auditor)
 long material to digest → LIBRARIAN   (reads it all once, returns a cited brief; keeps it out of main context)
+many tasks handed over  → COORDINATOR (ordered queue with tiers, dependencies, done-criteria; main session executes top-down)
+briefs / specs / prompts for other agents → PROMPTSMITH (always top tier: errors multiply per run)
+prose review            → EDITOR      (against a voice guide; never the writer)
+legal / regulatory substance → COUNSEL (jurisdiction, primary sources, what a professional must confirm)
+system / ops / deploy work → OPERATOR  (read-only diagnosis first; blast radius 2 stops for the human)
+logs, health, status checks → MONITOR  (reports only what changed or looks wrong)
 ```
 
 ## Step 3 — delegate to the pinned subagents
@@ -74,6 +80,12 @@ and each pins its model):
 - `debugger` — Opus at high effort, may add temporary instrumentation to find a cause
 - `analyst` — Opus at high effort, numbers computed by shown code
 - `librarian` — Sonnet at medium effort, large-context reader returning cited briefs
+- `coordinator` — Opus, read-only, turns a multi-task request into an ordered queue
+- `promptsmith` — Fable 5.1, read-only, writes briefs/specs/prompts other agents execute
+- `editor` — Opus at medium effort, read-only prose review against a standard
+- `counsel` — Fable 5.1, read-only legal/regulatory analysis with primary sources
+- `operator` — Opus, system administration and ops with read-only diagnosis first
+- `monitor` — Sonnet at low effort, read-only log/health/status checks
 
 Each agent file pins **both** a model and an effort level, so switching tier
 switches effort automatically:
@@ -92,6 +104,12 @@ switches effort automatically:
 | `debugger` | opus | high | "ultrathink" for intermittent or concurrency bugs |
 | `analyst` | opus | high | "think harder" for forecasts or multi-step derivations |
 | `librarian` | sonnet | medium | nothing — reading is the work |
+| `coordinator` | opus | high | "think hard" when tasks share files or tiers conflict |
+| `promptsmith` | fable | high | "ultrathink" for prompts that many sessions will run |
+| `editor` | opus | medium | nothing — the standard does the work |
+| `counsel` | fable | high | "ultrathink" for multi-jurisdiction or high-stakes questions |
+| `operator` | opus | high | "think hard" before any state-changing command |
+| `monitor` | sonnet | low | nothing — never bump a monitor |
 
 The table is the `quality` profile. On Claude Pro install with `PROFILE=pro`
 (Sonnet for the mechanical tiers, Opus for architect and auditor); the routing
@@ -137,6 +155,8 @@ Switching down is normal and expected; switching up is triggered by evidence.
 - Auditor says DO NOT SHIP → back to ARCHITECT with the findings; the builder does not patch an audit failure directly.
 - Builder or verifier hits a failure with no obvious cause → DEBUGGER first; ARCHITECT plans the fix from the debugger's confirmed cause.
 - Analyst marks a figure DECISION-GRADE → AUDITOR before anyone acts on it.
+- Monitor reports an anomaly → OPERATOR for system state, DEBUGGER for a failing behaviour, AUDITOR for anything security- or billing-shaped. The monitor itself never diagnoses.
+- Operator hits production, credentials, DNS, or a remote host → blast radius 2: stop, write the command list, human executes.
 
 **Shift DOWN when:**
 - The plan is approved → implementation goes to BUILDER, not the architect.
@@ -146,6 +166,8 @@ Switching down is normal and expected; switching up is triggered by evidence.
 - The remaining work is prose (docs, changelog, copy) → WRITER, with the verifier checking claims against code.
 - A UI part is built and testable → DESIGNER review in parallel with the verifier.
 - The input is long material (spec, transcript, big log) → LIBRARIAN reads it once; everyone else works from the brief.
+- The user hands over several tasks at once → COORDINATOR builds the queue first; then each item routes on its own score.
+- Prose is written → EDITOR reviews it, never the writer.
 
 **Never shift down:**
 - Inside a part that is still running — finish it at the tier it started on.

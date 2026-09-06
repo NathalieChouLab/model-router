@@ -1,6 +1,6 @@
 # model-router for Claude Code
 
-A skill plus twelve pinned subagents that route each **part** of a task to the right model *and* effort level, and re-route at every checkpoint while the task is running. Quality-first by default.
+A skill plus eighteen pinned subagents that route each **part** of a task to the right model *and* effort level, and re-route at every checkpoint while the task is running. Quality-first by default.
 
 Claude Code cannot change its own session model mid-task (`/model` and `/effort` are user-only). This router works around that: your main session stays on the top model and does the thinking about *who should do what*; each part is handed to a subagent whose file pins both a `model:` and an `effort:`. Switching tier switches both.
 
@@ -20,6 +20,12 @@ Claude Code cannot change its own session model mid-task (`/model` and `/effort`
 | `debugger` | opus | high | reproduces, bisects, instruments to find a confirmed cause; hands off the fix |
 | `analyst` | opus | high | numbers computed by shown, re-runnable code; flags DECISION-GRADE figures |
 | `librarian` | sonnet | medium | large-context reader: digests long specs, transcripts, logs into a cited brief |
+| `coordinator` | opus | high | read-only: turns a multi-task request into an ordered queue with tiers, dependencies, done-criteria |
+| `promptsmith` | fable | high | read-only: writes briefs, specs, system prompts, and agent files other agents will execute |
+| `editor` | opus | medium | read-only prose review against a voice guide or standard; never the writer |
+| `counsel` | fable | high | read-only legal/regulatory analysis: jurisdiction, primary sources, what a professional must confirm |
+| `operator` | opus | high | system administration and ops: read-only diagnosis first, minimal change, every command reported |
+| `monitor` | sonnet | low | read-only log/health/status checks; reports only what changed or looks wrong |
 
 ## How it routes
 
@@ -38,7 +44,7 @@ git clone https://github.com/NathalieChouLab/model-router.git
 cd model-router && ./install.sh
 ```
 
-This copies `skills/model-router/` to `~/.claude/skills/` and the twelve agents to `~/.claude/agents/`, backing up anything already there. Open a new Claude Code session and give it a non-trivial task, or type `/model-router`.
+This copies `skills/model-router/` to `~/.claude/skills/` and the eighteen agents to `~/.claude/agents/`, backing up anything already there. Open a new Claude Code session and give it a non-trivial task, or type `/model-router`.
 
 ### Profiles: pick one for your plan
 
@@ -62,6 +68,12 @@ PROFILE=cost ./install.sh      # usage-first on any plan
 | debugger | opus · high | opus · high | sonnet · high |
 | analyst | opus · high | sonnet · high | sonnet · medium |
 | librarian | sonnet · medium | sonnet · medium | haiku · medium |
+| coordinator | opus · high | opus · high | sonnet · high |
+| promptsmith | fable · high | opus · high | opus · high |
+| editor | opus · medium | sonnet · medium | sonnet · low |
+| counsel | fable · high | opus · high | opus · high |
+| operator | opus · high | sonnet · high | sonnet · high |
+| monitor | sonnet · low | haiku · low | haiku · low |
 
 **Why the `pro` profile looks like this.** On Claude Pro the session default is Sonnet 5, Opus draws on the same 5-hour usage window, and Fable can bill to usage credits rather than the plan's included limits (see [Claude Code model configuration](https://code.claude.com/docs/en/model-config)). So `pro` keeps the mechanical tiers on Sonnet at high effort, which is where most tokens go, and spends Opus only on the two tiers where judgment is expensive to get wrong: `architect` and `auditor`. The routing rules are identical; only the pins change. If you later buy usage credits or move to Max, re-run with `PROFILE=quality`.
 
