@@ -9,7 +9,7 @@ if [ -e "$DEST/skills/model-router" ]; then
 fi
 rm -rf "$DEST/skills/model-router"
 cp -R "$HERE/skills/model-router" "$DEST/skills/model-router"
-for a in scout builder verifier architect; do
+for a in scout researcher builder tester writer verifier architect auditor; do
   [ -e "$DEST/agents/$a.md" ] && cp "$DEST/agents/$a.md" "$DEST/agents/$a.md.bak"
   cp "$HERE/agents/$a.md" "$DEST/agents/$a.md"
 done

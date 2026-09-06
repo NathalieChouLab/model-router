@@ -43,10 +43,13 @@ Most real tasks are mixed. Split them so each part runs at its own tier:
 
 ```
 investigate + plan      → ARCHITECT   (stop, present plan, wait if blast radius ≥ 1)
-implement the plan      → BUILDER
+external facts / docs   → RESEARCHER  (library APIs, versions, platform behaviour; sourced)
 find/grep/summarize     → SCOUT       (run in parallel, results only, keeps main context clean)
-verify                  → BUILDER     (never the same agent that wrote the code)
-final review of a       → ARCHITECT   (only if blast radius = 2)
+write the tests         → TESTER      (from the brief, not the implementation; before or beside the builder)
+implement the plan      → BUILDER
+prose: docs, copy, README → WRITER    (from an approved outline; never decides positioning)
+verify                  → VERIFIER    (never the same agent that wrote the code)
+final gate on a         → AUDITOR     (only if blast radius = 2; SHIP / DO NOT SHIP)
 blast-radius-2 change
 ```
 
@@ -56,9 +59,13 @@ Use the Agent tool with the matching subagent (they live in `~/.claude/agents/`
 and each pins its model):
 
 - `scout` — read-only, Sonnet at low effort
-- `builder` — Opus, edits + tests
+- `researcher` — read-only, Sonnet at medium effort, web-enabled, sourced facts
+- `builder` — Opus, edits + runs checks
+- `tester` — Opus at high effort, writes and runs tests independently of the builder
+- `writer` — Opus at medium effort, prose from an approved outline
 - `verifier` — Opus, read-only, adversarial
 - `architect` — Fable 5.1, plans and decisions
+- `auditor` — Fable 5.1 at maximum effort, read-only final gate for blast radius 2
 
 Each agent file pins **both** a model and an effort level, so switching tier
 switches effort automatically:
@@ -66,9 +73,13 @@ switches effort automatically:
 | Agent | Model | Effort | Bump within tier by adding to the brief |
 |---|---|---|---|
 | `scout` | sonnet | low | nothing — never bump a scout |
-| `builder` | opus | high | "think harder" on concurrency, migrations, edge-case tests |
+| `researcher` | sonnet | medium | "think hard" only when sources conflict |
+| `builder` | opus | high | "think harder" on concurrency, migrations, edge cases |
+| `tester` | opus | high | "think harder" for concurrency or security test cases |
+| `writer` | opus | medium | "think hard" for positioning-sensitive copy |
 | `verifier` | opus | high | "think harder" when the change is subtle |
 | `architect` | fable | high | "ultrathink" for irreversible / unknown-cause work |
+| `auditor` | fable | max | already at maximum — never bump; split the change instead |
 
 One-off override without editing the files: the Agent tool's `model` parameter
 beats the frontmatter (e.g. run `builder` with `model: fable` for a part that is
@@ -106,12 +117,15 @@ Switching down is normal and expected; switching up is triggered by evidence.
 - Builder fails verification **once** → if the failure is a contained slip, retry BUILDER with "think harder"; if it hints the plan or the cause is off, go straight to ARCHITECT (Fable). Quality-first means one failure is enough evidence.
 - Builder fails verification **twice** → ARCHITECT, no exceptions.
 - Verifier flags a BLOCKER it can't explain → ARCHITECT root-causes before anyone patches.
+- Researcher returns UNKNOWN on a fact the plan depends on → ARCHITECT decides how to proceed without it; never let a builder assume.
+- Auditor says DO NOT SHIP → back to ARCHITECT with the findings; the builder does not patch an audit failure directly.
 
 **Shift DOWN when:**
 - The plan is approved → implementation goes to BUILDER, not the architect.
 - A part becomes a lookup, rename, grep, or summary → SCOUT, in parallel.
 - A retry passed → the *next* part resumes its own natural tier; the escalation does not stick to the whole task.
 - Verification is now mechanical (tests exist) → VERIFIER at default effort.
+- The remaining work is prose (docs, changelog, copy) → WRITER, with the verifier checking claims against code.
 
 **Never shift down:**
 - Inside a part that is still running — finish it at the tier it started on.
