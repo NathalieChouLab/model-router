@@ -51,6 +51,10 @@ prose: docs, copy, README → WRITER    (from an approved outline; never decides
 verify                  → VERIFIER    (never the same agent that wrote the code)
 final gate on a         → AUDITOR     (only if blast radius = 2; SHIP / DO NOT SHIP)
 blast-radius-2 change
+cause of a failure      → DEBUGGER    (reproduce, bisect, instrument; hands cause + repro to architect/builder)
+UI / visual review      → DESIGNER    (renders the page, checks against a written standard)
+numbers people act on   → ANALYST     (code-computed, re-runnable; DECISION-GRADE figures go to auditor)
+long material to digest → LIBRARIAN   (reads it all once, returns a cited brief; keeps it out of main context)
 ```
 
 ## Step 3 — delegate to the pinned subagents
@@ -66,6 +70,10 @@ and each pins its model):
 - `verifier` — Opus, read-only, adversarial
 - `architect` — Fable 5.1, plans and decisions
 - `auditor` — Fable 5.1 at maximum effort, read-only final gate for blast radius 2
+- `designer` — Opus, read-only visual/UX review against a standard
+- `debugger` — Opus at high effort, may add temporary instrumentation to find a cause
+- `analyst` — Opus at high effort, numbers computed by shown code
+- `librarian` — Sonnet at medium effort, large-context reader returning cited briefs
 
 Each agent file pins **both** a model and an effort level, so switching tier
 switches effort automatically:
@@ -80,6 +88,10 @@ switches effort automatically:
 | `verifier` | opus | high | "think harder" when the change is subtle |
 | `architect` | fable | high | "ultrathink" for irreversible / unknown-cause work |
 | `auditor` | fable | max | already at maximum — never bump; split the change instead |
+| `designer` | opus | high | "think hard" when the standard is thin |
+| `debugger` | opus | high | "ultrathink" for intermittent or concurrency bugs |
+| `analyst` | opus | high | "think harder" for forecasts or multi-step derivations |
+| `librarian` | sonnet | medium | nothing — reading is the work |
 
 The table is the `quality` profile. On Claude Pro install with `PROFILE=pro`
 (Sonnet for the mechanical tiers, Opus for architect and auditor); the routing
@@ -123,6 +135,8 @@ Switching down is normal and expected; switching up is triggered by evidence.
 - Verifier flags a BLOCKER it can't explain → ARCHITECT root-causes before anyone patches.
 - Researcher returns UNKNOWN on a fact the plan depends on → ARCHITECT decides how to proceed without it; never let a builder assume.
 - Auditor says DO NOT SHIP → back to ARCHITECT with the findings; the builder does not patch an audit failure directly.
+- Builder or verifier hits a failure with no obvious cause → DEBUGGER first; ARCHITECT plans the fix from the debugger's confirmed cause.
+- Analyst marks a figure DECISION-GRADE → AUDITOR before anyone acts on it.
 
 **Shift DOWN when:**
 - The plan is approved → implementation goes to BUILDER, not the architect.
@@ -130,6 +144,8 @@ Switching down is normal and expected; switching up is triggered by evidence.
 - A retry passed → the *next* part resumes its own natural tier; the escalation does not stick to the whole task.
 - Verification is now mechanical (tests exist) → VERIFIER at default effort.
 - The remaining work is prose (docs, changelog, copy) → WRITER, with the verifier checking claims against code.
+- A UI part is built and testable → DESIGNER review in parallel with the verifier.
+- The input is long material (spec, transcript, big log) → LIBRARIAN reads it once; everyone else works from the brief.
 
 **Never shift down:**
 - Inside a part that is still running — finish it at the tier it started on.

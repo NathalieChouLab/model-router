@@ -6,3 +6,7 @@ writer	sonnet	low
 verifier	sonnet	medium
 architect	opus	high
 auditor	opus	high
+designer	sonnet	medium
+debugger	sonnet	high
+analyst	sonnet	medium
+librarian	haiku	medium

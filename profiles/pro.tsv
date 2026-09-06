@@ -6,3 +6,7 @@ writer	sonnet	medium
 verifier	sonnet	high
 architect	opus	high
 auditor	opus	xhigh
+designer	sonnet	high
+debugger	opus	high
+analyst	sonnet	high
+librarian	sonnet	medium

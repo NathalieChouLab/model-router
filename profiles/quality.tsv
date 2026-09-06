@@ -6,3 +6,7 @@ writer	opus	medium
 verifier	opus	high
 architect	fable	high
 auditor	fable	max
+designer	opus	high
+debugger	opus	high
+analyst	opus	high
+librarian	sonnet	medium
