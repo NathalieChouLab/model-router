@@ -91,19 +91,14 @@ The tables live in `profiles/*.tsv` (agent, model, effort per line) — edit or 
 
 `skills/model-router/references/codex-port-prompt.md` is a ready-to-paste prompt that asks OpenAI Codex to discover its own model/effort/sub-agent levers and build the same router with `config.toml` profiles and `AGENTS.md`.
 
-## Cloud sandboxes (Claude Code web / mobile, Codex cloud)
+## Cloud sessions (Claude Code web, mobile, `claude --cloud`)
 
-Cloud sessions run in a fresh sandbox and never see your machine's home folder. Put the router inside the repo instead, where it travels with the clone:
+Cloud sessions run in a fresh sandbox and never see your machine's `~/.claude`. You do **not** need to commit the router into every repo: paste `cloud/setup-script.sh` into your cloud environment's **Setup script** field at [claude.ai/code](https://claude.ai/code) (environment settings). It runs once per environment, installs the router into the sandbox's `~/.claude` from this repo, and the snapshot is cached, so every later session on any repo starts with the 22 agents ready. Pick the pins with an environment variable: `MODEL_ROUTER_PROFILE=quality|pro|cost` (default quality).
 
-```bash
-PROJECT_DIR=/path/to/your/repo ./install.sh
-cd /path/to/your/repo && git add -A && git commit -m "Add model-router" && git push
-```
-
-Or, inside any cloud session, install for that session only:
+Per-repo install is still available for repos shared with people who don't use the setup script:
 
 ```bash
-git clone https://github.com/NathalieChouLab/model-router.git /tmp/mr && /tmp/mr/install.sh
+PROJECT_DIR=/path/to/your/repo ./install.sh   # writes .claude/ and a CLAUDE.md note; commit and push
 ```
 
 ## Requirements
